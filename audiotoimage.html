@@ -8,6 +8,7 @@
 <body>
     <input type="file" id="fileInput" />
     <input type="number" step="1" id="width">
+<button id="interpret">Update Image</button>
     <br>
     <canvas id="canvas"></canvas>
     <script>
@@ -28,6 +29,7 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
 		reader.readAsArrayBuffer(file);
 	}
 });
+	    document.getElementById("interpret").addEventListener("click", handleFileSelect)
         function handleFileSelect() {
             const width = Number(document.getElementById("width").value || "480")
             const height = Math.ceil(pixelValues.length / width);
