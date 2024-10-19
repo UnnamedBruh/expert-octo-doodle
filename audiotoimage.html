@@ -13,7 +13,6 @@
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
-        let event = null
         let pixelValues
 document.getElementById('fileInput').addEventListener('change', function(event) {
 	const file = event.target.files[0]
@@ -23,16 +22,12 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
 			const audioContext = new (window.AudioContext || window.webkitAudioContext)()
 			audioContext.decodeAudioData(e.target.result, (buffer) => {
 				pixelValues = new Float32Array(buffer.getChannelData(0))
-                update(e)
+                                handleFileSelect()
 			});
 		};
 		reader.readAsArrayBuffer(file);
 	}
 });
-        function update(e) {
-            event = e;
-            handleFileSelect(event);
-        }
         function handleFileSelect() {
             const width = Number(document.getElementById("width").value || "480")
             const height = Math.ceil(pixelValues.length / width);
