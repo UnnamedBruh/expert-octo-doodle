@@ -10,7 +10,9 @@
     <input type="file" id="fileInput" /><br>
     Corruption Percentage: <input type="number" step="0.00001" min="0" max="100" id="perc"><br>
   Start at Byte <input type="number" step="1" min="0" id="startbyte"><br>
-    Corruption Type: <select id="corr"><option>Set Byte Values</option><option>Adjust Byte Values</option></select>
+    Corruption Type: <select id="corr"><option>Set Byte Values</option><option>Adjust Byte Values</option></select><br>
+    <h2>Info</h2>
+    Number of bytes corrupted: <a id="bytescorrupted" style="color: green"></a>
     
     <button id="convertButton">Corrupt</button>
     <a id="downloadLink" style="display:none;">Download Corrupted File</a>
@@ -53,22 +55,29 @@
         // Step 2: Example manipulation (corruption)
         const corruptionLevel = Number(document.getElementById("perc").value) / 100;
       const startB = Number(document.getElementById("startbyte").value);
-        const hi = document.getElementById("corr").value
-        const corruptedData = Uint8Array.from(uint8Array)
-      let byte
+        const hi = document.getElementById("corr").value;
+        const corruptedData = Uint8Array.from(uint8Array), cac = Math.max(0, startB);
+        const len = corruptedData.length;
+      let byte, bytesCorrupted = 0;
         
         if (hi === "Set Byte Values") {
-            for (let i = Math.max(0, startB); i < corruptedData.length; i++) {
+            for (let i = cac; i !== len; i++) {
               byte = corruptedData[i]
-              corruptedData[i] = Math.random() < corruptionLevel ? (byte ^ (Math.floor(Math.random() * 255))) : byte;
+              if (Math.random() < corruptionLevel) {
+                  corruptedData[i] =  byte ^ (Math.floor(Math.random() * 255)), bytesCorrupted++;
+              }
             }
         } else {
             const intensity = Number(prompt("Enter any intensity value of the corruption. It is going to be treated as a percentage value")) * 256; // Use the prompt because I'm lazy :P
-            for (let i = Math.max(0, startB); i < corruptedData.length; i++) {
+            for (let i = cac; i !== len; i++) {
               byte = corruptedData[i]
-              corruptedData[i] = Math.random() < corruptionLevel ? byte + Math.floor(Math.random() * intensity) : byte;
+                if (Math.random() < corruptionLevel) {
+                  corruptedData[i] = byte + Math.floor(Math.random() * intensity), bytesCorrupted++;
+                }
             }
         }
+
+        document.getElementOfId("bytescorrupted").textContent = bytesCorrupted;
 
         // Step 3: Create a corrupted blob
         const corruptedBlob = new Blob([corruptedData], { type: file.type });
