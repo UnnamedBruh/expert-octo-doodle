@@ -55,7 +55,7 @@
         const corruptionLevel = Number(document.getElementById("perc").value) / 100;
       const startB = Number(document.getElementById("startbyte").value);
         const hi = document.getElementById("corr").value;
-        const corruptedData = Uint8Array.from(uint8Array), cac = Math.max(0, startB);
+        let corruptedData = Uint8Array.from(uint8Array), cac = Math.max(0, startB);
         const len = corruptedData.length;
       let byte, bytesCorrupted = 0;
         
@@ -75,15 +75,21 @@
                 }
             }
         } else if (hi === "Add Byte Values") {
+            let arr = Array.from(corruptedData)
             bytesCorrupted = Math.floor(corruptedData.length * corruptionLevel)
             for (let i = 0; i < bytesCorrupted; i++) {
-                corruptedData.splice(Math.floor(Math.random() * corruptedData.length), 0, Math.floor(Math.random() * 256))
+                arr.splice(Math.floor(Math.random() * corruptedData.length), 0, Math.floor(Math.random() * 256))
             }
+            corruptedData = new Uint8Array(arr.length)
+            corruptedData.set(arr)
         } else if (hi === "Remove Byte Values") {
+             let arr = Array.from(corruptedData)
             bytesCorrupted = Math.floor(corruptedData.length * corruptionLevel)
             for (let i = 0; i < bytesCorrupted; i++) {
-                corruptedData.splice(Math.floor(Math.random() * corruptedData.length), 1)
+                arr.splice(Math.floor(Math.random() * corruptedData.length), 1)
             }
+            corruptedData = new Uint8Array(arr.length)
+            corruptedData.set(arr)
         }
 
         document.getElementById("bytescorrupted").textContent = bytesCorrupted;
